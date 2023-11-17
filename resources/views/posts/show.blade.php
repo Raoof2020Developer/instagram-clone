@@ -2,7 +2,8 @@
     <div class="h-screen md:flex md:flex-row">
         {{-- Left Side --}}
         <div class="h-full md:w-7/12 bg-black flex items-center">
-            <img src="/{{ $post->image }}" alt="{{ $post->description }}" class="max-h-screen object-cover mx-auto">
+            <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->description }}"
+                class="max-h-screen object-cover mx-auto">
         </div>
 
         {{-- Right Side --}}
@@ -13,7 +14,22 @@
                 <div class="flex items-center p-5">
                     <img src="{{ $post->owner->image }}" alt="{{ $post->owner->username }}"
                         class="mr-5 h-10 w-10 rounded-full">
-                    <a href="/{{ $post->owner->username }}" class="font-bold">{{ $post->owner->username }}</a>
+                    <div class="grow">
+                        <a href="/{{ $post->owner->username }}" class="font-bold">{{ $post->owner->username }}</a>
+                    </div>
+                    @if ($post->owner->id === auth()->id())
+                        <a href="{{ route('posts.edit', $post->slug) }}">
+                            <i class='bx bxs-edit text-xl'></i>
+                        </a>
+                    @endif
+
+                    <form action="{{ route('posts.destroy', $post->slug) }}" method="post">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" onclick="return confirm('Are you sure?')">
+                            <i class='bx bxs-x-square ml-2 text-xl text-red-600'></i>
+                        </button>
+                    </form>
                 </div>
             </div>
 
@@ -60,7 +76,7 @@
 
             </div>
             <div class="border-t p-5">
-                <form action="/posts/{{ $post->slug }}/comments" method="POST">
+                <form action="{{ route('comments.store', $post->slug) }}" method="POST">
                     @csrf
                     <div class="flex flex-row">
                         <textarea name="body" id="comment_body" placeholder="{{ __('Add a comment...') }}"

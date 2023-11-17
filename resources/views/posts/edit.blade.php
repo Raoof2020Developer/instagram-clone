@@ -2,7 +2,7 @@
 
     <div class="card p-10">
         {{-- Title  --}}
-        <h1 class="text-3xl mb-10">{{ __('Create a new post') }}</h1>
+        <h1 class="text-3xl mb-10">{{ __('Edit a new post') }}</h1>
 
         {{-- Errors  --}}
         <div class="flex flex-col justify-center items-center w-full">
@@ -18,11 +18,12 @@
         </div>
 
         {{-- Form --}}
-        <form action="{{ route('posts.store') }}" method="post" enctype="multipart/form-data" class="w-full">
+        <form action="{{ route('posts.update', $post->slug) }}" method="post" enctype="multipart/form-data" class="w-full">
             @csrf
-            <x-create-edit-form />
+            @method('PATCH')
+            <x-create-edit-form :post="$post" />
 
-            <x-primary-button class="mt-4">{{ __('Create Post') }}</x-primary-button>
+            <x-primary-button class="mt-4">{{ __('Update Your Post') }}</x-primary-button>
 
         </form>
     </div>

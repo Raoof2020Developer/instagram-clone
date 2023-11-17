@@ -34,7 +34,18 @@ Route::get('/posts', [PostController::class, 'index'])->name('posts.index')->mid
 Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create')->middleware('auth');
 Route::post('/posts', [PostController::class, 'store'])->name('posts.store')->middleware('auth');
 Route::get('/posts/{post:slug}', [PostController::class, 'show'])->name('posts.show')->middleware('auth');
+Route::get('/posts/{post:slug}/edit', [PostController::class, 'edit'])->name('posts.edit')->middleware('auth');
+Route::patch('/posts/{post:slug}', [PostController::class, 'update'])->name('posts.update')->middleware('auth');
+
 
 Route::post('/posts/{post:slug}/comments', [CommentController::class, 'store'])->name('comments.store')->middleware('auth');
+
+Route::middleware('auth')->group(function() {
+    
+    Route::resource('posts', PostController::class);
+
+
+    Route::post('/posts/{post:slug}/comments', [CommentController::class, 'store'])->name('comments.store');
+});
 
 require __DIR__.'/auth.php';
