@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -29,6 +30,11 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('/posts/create', [PostController::class,'create'])->name('posts.create')->middleware('auth');
+Route::get('/posts', [PostController::class, 'index'])->name('posts.index')->middleware('auth');
+Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create')->middleware('auth');
 Route::post('/posts', [PostController::class, 'store'])->name('posts.store')->middleware('auth');
+Route::get('/posts/{post:slug}', [PostController::class, 'show'])->name('posts.show')->middleware('auth');
+
+Route::post('/posts/{post:slug}/comments', [CommentController::class, 'store'])->name('comments.store')->middleware('auth');
+
 require __DIR__.'/auth.php';
