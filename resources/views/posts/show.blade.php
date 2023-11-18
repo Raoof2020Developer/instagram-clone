@@ -21,15 +21,15 @@
                         <a href="{{ route('posts.edit', $post->slug) }}">
                             <i class='bx bxs-edit text-xl'></i>
                         </a>
+                        <form action="{{ route('posts.destroy', $post->slug) }}" method="post">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" onclick="return confirm('Are you sure?')">
+                                <i class='bx bxs-x-square ml-2 text-xl text-red-600'></i>
+                            </button>
+                        </form>
                     @endif
 
-                    <form action="{{ route('posts.destroy', $post->slug) }}" method="post">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" onclick="return confirm('Are you sure?')">
-                            <i class='bx bxs-x-square ml-2 text-xl text-red-600'></i>
-                        </button>
-                    </form>
                 </div>
             </div>
 

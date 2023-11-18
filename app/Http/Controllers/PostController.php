@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -14,7 +15,9 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
+        $posts = Post::all();
+        $suggestedUsers = auth()->user()->suggested_users();
+        return view('posts.index', compact(['posts', 'suggestedUsers']));
     }
 
     /**
@@ -89,5 +92,10 @@ class PostController extends Controller
         $post->delete();
 
         return redirect('/dashboard');
+    }
+
+    public function explore() {
+        $posts = Post::whereRelation('owner', 'private_account', '=', 0)->whereNot('user_id', auth()->id())->paginate(9);
+        return view('posts.explore', compact('posts'));
     }
 }
