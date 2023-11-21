@@ -28,6 +28,7 @@
 
             </div>
 
+
             <div class="mr-5 mt-4">
                 <h3 class="font-bold text-gray-500">{{ __('Suggestions for you:') }}</h3>
 

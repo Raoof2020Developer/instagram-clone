@@ -1,9 +1,10 @@
 <?php
 
-use App\Http\Controllers\CommentController;
-use App\Http\Controllers\PostController;
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,17 +16,21 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+require __DIR__.'/auth.php';
 
 // Route::get('/', function () {
-//     return view('welcome');
+    //     return view('welcome');
 // });
-Route::get('/', [PostController::class, 'index'])->name('home_page')->middleware('auth');
 Route::get('/explore', [PostController::class, 'explore'])->name('explore')->middleware('auth');
+Route::get('/{user:username}', [UserController::class, 'index'])->middleware('auth')->name('user_profile');
+Route::get('/{user:username}/edit', [UserController::class, 'edit'])->middleware('auth')->name('user_profile.edit');
+Route::patch('/{user:username}/update', [UserController::class, 'update'])->middleware('auth')->name('user_profile.update');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::get('/', [PostController::class, 'index'])->name('home_page');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -35,14 +40,12 @@ Route::middleware('auth')->group(function () {
 
 
 
-Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create')->middleware('auth');
-Route::post('/posts', [PostController::class, 'store'])->name('posts.store')->middleware('auth');
-Route::get('/posts/{post:slug}', [PostController::class, 'show'])->name('posts.show')->middleware('auth');
-Route::get('/posts/{post:slug}/edit', [PostController::class, 'edit'])->name('posts.edit')->middleware('auth');
-Route::patch('/posts/{post:slug}', [PostController::class, 'update'])->name('posts.update')->middleware('auth');
-Route::delete('/posts/{post:slug}', [PostController::class, 'delete'])->name('posts.destroy')->middleware('auth');
+Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
+Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
+Route::get('/posts/{post:slug}', [PostController::class, 'show'])->name('posts.show');
+Route::get('/posts/{post:slug}/edit', [PostController::class, 'edit'])->name('posts.edit');
+Route::patch('/posts/{post:slug}', [PostController::class, 'update'])->name('posts.update');
+Route::delete('/posts/{post:slug}', [PostController::class, 'delete'])->name('posts.destroy');
 
 
 Route::post('/posts/{post:slug}/comments', [CommentController::class, 'store'])->name('comments.store')->middleware('auth');
-
-require __DIR__.'/auth.php';
