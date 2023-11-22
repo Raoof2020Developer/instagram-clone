@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\LikeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 
@@ -49,3 +50,4 @@ Route::delete('/posts/{post:slug}', [PostController::class, 'delete'])->name('po
 
 
 Route::post('/posts/{post:slug}/comments', [CommentController::class, 'store'])->name('comments.store')->middleware('auth');
+Route::get('/posts/{post:slug}/likes', LikeController::class)->name('posts.likes')->middleware('auth');
