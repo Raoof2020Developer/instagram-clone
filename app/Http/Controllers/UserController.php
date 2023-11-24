@@ -38,4 +38,14 @@ class UserController extends Controller
 
         return redirect()->route('user_profile', $user->username);
     }
+
+    public function follow(User $user) {
+        auth()->user()->follow($user);
+        return back();
+    }
+
+    public function unfollow(User $user) {
+        auth()->user()->unfollow($user);
+        return back();
+    }
 }

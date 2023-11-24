@@ -6,18 +6,34 @@
     <div class="grid grid-cols-4">
         {{-- User Image  --}}
         <div class="px-4 col-span-1 order-1">
-            <img src="{{ asset('storage/' . $user->image) }}" alt="{{ $user->username }} profile picture"
-                class="rounded-full w-20 md:w-40 border border-neutral-300">
+
+            <img src="{{ strpos($user->image, 'https') !== false ? $user->image : asset('storage/' . $user->image) }}"
+                alt="{{ $user->username }} profile picture" class="rounded-full w-20 md:w-40 border border-neutral-300">
         </div>
 
         {{-- Username And Button  --}}
-        <div class="px-4 col-span-2 flex flex-col order-2 md:ml-0 md:col-span-3">
-            <div class="text-3xl mb-3">{{ $user->username }}</div>
-
-            @if ($user->id === auth()->id())
-                <a href="/{{ $user->username }}/edit"
-                    class="w-44 border text-sm font-bold py-1 rounded-md border-neutral-300 text-center">{{ __('Edit Profile') }}</a>
-            @endif
+        <div class="px-4 col-span-2 flex flex-row items-start order-2 md:ml-0 md:col-span-3">
+            <div class="text-3xl mb-3 my-10">{{ $user->username }}</div>
+            <div class="ml-5 my-12">
+                @if ($user->id === auth()->id())
+                    <a href="/{{ $user->username }}/edit"
+                        class="w-50 border text-sm font-bold px-4 py-1 rounded-md border-neutral-300 text-center">{{ __('Edit Profile') }}</a>
+                @elseif (auth()->user()->is_following($user))
+                    <a href="{{ route('users.unfollow', $user->username) }}"
+                        class="w-30 bg-blue-400 text-white px-3 py-1 rounded text-center self-start">
+                        {{ __('Unfollow') }}
+                    </a>
+                @elseif (auth()->user()->is_pending($user))
+                    <span class="w-30 bg-gray-400 text-white px-3 py-1 rounded text-center self-start">
+                        {{ __('Pending') }}
+                    </span>
+                @else
+                    <a href="{{ route('users.follow', $user->username) }}"
+                        class="w-30 bg-blue-400 text-white px-3 py-1 rounded text-center self-start">
+                        {{ __('Follow') }}
+                    </a>
+                @endif
+            </div>
         </div>
 
         {{--  User Info --}}
@@ -37,11 +53,31 @@
                     <span class='text-neutral-500 ml-1 md:text-black'>
                         {{ $user->posts->count() > 1 ? __(' posts') : __(' post') }}</span>
                 </li>
+
+                <li class="flex flex-col md:flex-row text-center">
+                    <div class="md:ltr:mr-1 md:rtl:ml-1 font-bold md:font-normal">
+                        {{ $user->followers()->count() }}
+                    </div>
+                    <span class='text-neutral-500 ml-1 md:text-black'>
+                        {{ $user->followers()->count() > 1 ? __(' followers') : __(' follower') }}</span>
+                </li>
+
+                <li class="flex flex-col md:flex-row text-center">
+                    <div class="md:ltr:mr-1 md:rtl:ml-1 font-bold md:font-normal">
+                        {{ $user->following()->count() }}
+                    </div>
+                    <span class='text-neutral-500 ml-1 md:text-black'>
+                        {{ $user->following()->count() > 1 ? __(' followings') : __(' following') }}</span>
+                </li>
             </ul>
         </div>
     </div>
     {{-- Bottom --}}
-    @if ($user->posts()->count() > 0 and ($user->private_account == false or auth()->id() == $user->id))
+    @if (
+        $user->posts()->count() > 0 and
+            ($user->private_account == false or
+                auth()->id() == $user->id or
+                auth()->user()->is_following($user)))
         <div class="grid grid-cols-3 gap-4 my-5">
             @foreach ($user->posts as $post)
                 <a class="aspect-square block w-full" href="{{ route('posts.show', $post->slug) }}">

@@ -16,7 +16,7 @@
             <div class="flex flex-row text-sm">
                 <div class="mr-5">
                     <a href="/{{ auth()->user()->username }}">
-                        <img src="{{ auth()->user()->image }}" alt="{{ auth()->user()->username }}"
+                        <img src="{{ asset('storage/' . auth()->user()->image) }}" alt="{{ auth()->user()->username }}"
                             class="h-12 w-12 rounded-full border border-gray-300">
                     </a>
                 </div>
@@ -44,9 +44,21 @@
 
                             <div class="flex flex-col grow">
                                 <a href="/{{ $suggestedUser->username }}"
-                                    class="font-bold">{{ $suggestedUser->username }} </a>
+                                    class="font-bold">{{ $suggestedUser->username }}
+                                    @if (auth()->user()->is_follower($suggestedUser))
+                                        <span class="text-gray-500 text-xs">{{ __('Follower') }}</span>
+                                    @endif
+                                </a>
                                 <div class="text-gray-500 text-sm">{{ $suggestedUser->name }}</div>
+
                             </div>
+
+                            @if (auth()->user()->is_pending($suggestedUser))
+                                <span class="text-gray-500 font-bold">{{ __('Pending') }}</span>
+                            @else
+                                <a href="{{ route('users.follow', $suggestedUser->username) }}"
+                                    class="text-blue-500 font-bold">{{ __('Follow') }}</a>
+                            @endif
                         </li>
                     @endforeach
                 </ul>

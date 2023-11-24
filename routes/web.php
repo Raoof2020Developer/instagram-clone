@@ -50,4 +50,6 @@ Route::delete('/posts/{post:slug}', [PostController::class, 'delete'])->name('po
 
 
 Route::post('/posts/{post:slug}/comments', [CommentController::class, 'store'])->name('comments.store')->middleware('auth');
-Route::get('/posts/{post:slug}/likes', LikeController::class)->name('posts.likes')->middleware('auth');
+Route::get('/posts/{post:slug}/like', LikeController::class)->name('posts.likes')->middleware('auth');
+Route::get('/{user:username}/follow', [UserController::class, 'follow'])->name('users.follow')->middleware('auth');
+Route::get('/{user:username}/unfollow', [UserController::class, 'unfollow'])->name('users.unfollow')->middleware('auth');
