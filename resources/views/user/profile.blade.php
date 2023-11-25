@@ -15,24 +15,33 @@
         <div class="px-4 col-span-2 flex flex-row items-start order-2 md:ml-0 md:col-span-3">
             <div class="text-3xl mb-3 my-10">{{ $user->username }}</div>
             <div class="ml-5 my-12">
-                @if ($user->id === auth()->id())
-                    <a href="/{{ $user->username }}/edit"
-                        class="w-50 border text-sm font-bold px-4 py-1 rounded-md border-neutral-300 text-center">{{ __('Edit Profile') }}</a>
-                @elseif (auth()->user()->is_following($user))
-                    <a href="{{ route('users.unfollow', $user->username) }}"
-                        class="w-30 bg-blue-400 text-white px-3 py-1 rounded text-center self-start">
-                        {{ __('Unfollow') }}
-                    </a>
-                @elseif (auth()->user()->is_pending($user))
-                    <span class="w-30 bg-gray-400 text-white px-3 py-1 rounded text-center self-start">
-                        {{ __('Pending') }}
-                    </span>
-                @else
+                @auth
+                    @if ($user->id === auth()->id())
+                        <a href="/{{ $user->username }}/edit"
+                            class="w-50 border text-sm font-bold px-4 py-1 rounded-md border-neutral-300 text-center">{{ __('Edit Profile') }}</a>
+                    @elseif (auth()->user()->is_following($user))
+                        <a href="{{ route('users.unfollow', $user->username) }}"
+                            class="w-30 bg-blue-400 text-white px-3 py-1 rounded text-center self-start">
+                            {{ __('Unfollow') }}
+                        </a>
+                    @elseif (auth()->user()->is_pending($user))
+                        <span class="w-30 bg-gray-400 text-white px-3 py-1 rounded text-center self-start">
+                            {{ __('Pending') }}
+                        </span>
+                    @else
+                        <a href="{{ route('users.follow', $user->username) }}"
+                            class="w-30 bg-blue-400 text-white px-3 py-1 rounded text-center self-start">
+                            {{ __('Follow') }}
+                        </a>
+                    @endif
+                @endauth
+
+                @guest
                     <a href="{{ route('users.follow', $user->username) }}"
                         class="w-30 bg-blue-400 text-white px-3 py-1 rounded text-center self-start">
                         {{ __('Follow') }}
                     </a>
-                @endif
+                @endguest
             </div>
         </div>
 

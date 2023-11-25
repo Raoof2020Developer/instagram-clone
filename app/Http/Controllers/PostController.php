@@ -13,16 +13,11 @@ class PostController extends Controller
     /**
      * Display a listing of the resource.
      */
-
-    public function __construct() {
-        $this->middleware('auth');
-    }
     
     public function index()
     {
         $ids = auth()->user()->following()->wherePivot('confirmed' , true)->get()->pluck('id');
         $posts = Post::whereIn('user_id', $ids)->latest()->get();
-        // dd($ids);
         $suggestedUsers = auth()->user()->suggested_users();
         return view('posts.index', compact(['posts', 'suggestedUsers']));
     }
@@ -32,6 +27,7 @@ class PostController extends Controller
      */
     public function create()
     {
+
         return view('posts.create');
     }
 
@@ -67,6 +63,8 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
+        $this->authorize('update', $post);
+
         return view('posts.edit', compact('post'));
     }
 
@@ -75,6 +73,8 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
+        $this->authorize('update', $post);
+
         $data = $request->validate([
             'description' => 'required',
             'image' => 'nullable|mimes:jpg,png,jpeg,gif'
@@ -95,6 +95,8 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
+        $this->authorize('update', $post);
+
         Storage::delete('public/' . $post->image);
         $post->delete();
 

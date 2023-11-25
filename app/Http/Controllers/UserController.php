@@ -14,10 +14,15 @@ class UserController extends Controller
     }
 
     public function edit(User $user) {
+
+
+        // abort_if(auth()->user()->cannot('edit-update-profile', $user) , 403, 'You are not authorized to see this page.');
+        // $this->authorize('edit-update-profile', $user);
         return view('user.edit', compact('user'));
     }
 
     public function update(User $user, UpdateProfileInfosReq $request) {
+
         $data = $request->safe()->collect();
         if ($request->password == '') {
             unset($data['password']);

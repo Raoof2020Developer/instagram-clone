@@ -12,12 +12,12 @@
             {{-- Top  --}}
             <div class="border-b-2">
                 <div class="flex items-center p-5">
-                    <img src="{{ $post->owner->image }}" alt="{{ $post->owner->username }}"
-                        class="mr-5 h-10 w-10 rounded-full">
+                    <img src="{{ strpos($post->owner->image, 'https') !== false ? $post->owner->image : asset('storage/' . $post->owner->image) }}"
+                        alt="{{ $post->owner->username }}" class="mr-5 h-10 w-10 rounded-full">
                     <div class="grow">
                         <a href="/{{ $post->owner->username }}" class="font-bold">{{ $post->owner->username }}</a>
                     </div>
-                    @if ($post->owner->id === auth()->id())
+                    @can('update', $post)
                         <a href="{{ route('posts.edit', $post->slug) }}">
                             <i class='bx bxs-edit text-xl'></i>
                         </a>
@@ -28,13 +28,16 @@
                                 <i class='bx bxs-x-square ml-2 text-xl text-red-600'></i>
                             </button>
                         </form>
-                    @elseif (auth()->user()->is_following($post->owner))
-                        <a href="{{ route('users.unfollow', $post->owner->username) }}"
-                            class="w-30 text-blue-500 text-sm font-bold px-3 text-center">{{ __('Unfollow') }}</a>
-                    @else
-                        <a href="{{ route('users.follow', $post->owner->username) }}"
-                            class="w-30 text-blue-500 text-sm font-bold px-3 text-center">{{ __('Follow') }}</a>
-                    @endif
+                    @endcan
+                    @cannot('update', $post)
+                        @if (auth()->user()->is_following($post->owner))
+                            <a href="{{ route('users.unfollow', $post->owner->username) }}"
+                                class="w-30 text-blue-500 text-sm font-bold px-3 text-center">{{ __('Unfollow') }}</a>
+                        @else
+                            <a href="{{ route('users.follow', $post->owner->username) }}"
+                                class="w-30 text-blue-500 text-sm font-bold px-3 text-center">{{ __('Follow') }}</a>
+                        @endif
+                    @endcannot
 
                 </div>
             </div>
@@ -42,7 +45,8 @@
             {{-- Middle --}}
             <div class="flex flex-col grow overflow-y-auto">
                 <div class="flex items-start p-5">
-                    <img src="{{ $post->owner->image }}" class="ltr:mr-5 rtl:ml-5 h-10 w-10 rounded-full">
+                    <img src="{{ strpos($post->owner->image, 'https') !== false ? $post->owner->image : asset('storage/' . $post->owner->image) }}"
+                        class="ltr:mr-5 rtl:ml-5 h-10 w-10 rounded-full">
                     <div>
                         <a href="{{ $post->owner->username }}" class="font-bold">{{ $post->owner->username }}</a>
                         {{ $post->description }}
@@ -53,8 +57,8 @@
                 <div class="grow">
                     @foreach ($post->comments as $comment)
                         <div class="flex items-start px-5 py-2">
-                            <img src="{{ $comment->owner->image }}" alt=""
-                                class="h-100 ltr:mr-5 rtl:ml-5 w-10 rounded-full">
+                            <img src="{{ strpos($comment->owner->image, 'https') !== false ? $comment->owner->image : asset('storage/' . $comment->owner->image) }}"
+                                alt="" class="h-100 ltr:mr-5 rtl:ml-5 w-10 rounded-full">
                             <div class="flex flex-col">
                                 <div>
                                     <a href="/{{ $comment->owner->username }}"
