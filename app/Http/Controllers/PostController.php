@@ -93,14 +93,14 @@ class PostController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Post $post)
+    public function delete(Post $post)
     {
         $this->authorize('update', $post);
 
         Storage::delete('public/' . $post->image);
         $post->delete();
 
-        return redirect('/dashboard');
+        return redirect('/');
     }
 
     public function explore() {

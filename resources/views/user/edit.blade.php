@@ -36,7 +36,7 @@
                         <div>
                             <label class="block text-sm font-medium text-gray-700"> {{ __('Photo') }} </label>
                             <div class="mt-1 flex items-center">
-                                <img src="{{ $user->image }}"
+                                <img src="{{ strpos($user->image, 'https') !== false ? $user->image : asset('storage/' . $user->image) }}"
                                     class="h-12 w-12 object-cover rounded-full ltr:mr-5 rtl:ml-5 border border-gray-300">
                                 <input
                                     class="w-full border border-gray-200 bg-gray-50 block focus:outline-none rounded-xl hidden"

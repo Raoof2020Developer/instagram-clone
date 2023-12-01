@@ -34,7 +34,7 @@ Route::middleware('auth')->group(function () {
         return view('dashboard');
     })->middleware(['auth', 'verified'])->name('dashboard');
 
-    Route::get('/', [PostController::class, 'index'])->name('home_page')->withoutMiddleware('auth');
+    Route::get('/', [PostController::class, 'index'])->name('home_page');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

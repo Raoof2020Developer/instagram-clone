@@ -73,16 +73,15 @@
                     @endforeach
                 </div>
 
-                {{-- Likes and Actions --}}
-
-                {{-- <div class="border-t p-3 flex flex-row">
+                <div class="flex flex-row p-3 border-t">
                     <livewire:like :post="$post" />
-                    <a class="grow" onclick="document.getElementById('comment_body').focus()"><i
-                            class="bx bx-comment text-3xl hover:text-gray-400 cursor-pointer ltr:mr-3 rtl:ml-3"></i></a>
-
-
+                    <span class="grow" onclick="document.getElementById('comment_body').focus()">
+                        <i class="bx bx-comment text-3xl hover:text-gray-400 cursor-pointer mr-3"></i>
+                    </span>
                 </div>
-                <livewire:likedby :post="$post" /> --}}
+                <livewire:likedby :post="$post" />
+
+
 
             </div>
             <div class="border-t p-5">
