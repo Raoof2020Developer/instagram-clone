@@ -19,10 +19,13 @@
                     @if ($user->id === auth()->id())
                         <a href="/{{ $user->username }}/edit"
                             class="w-50 border text-sm font-bold px-4 py-1 rounded-md border-neutral-300 text-center">{{ __('Edit Profile') }}</a>
-                    @elseif (auth()->user()->is_following($user))
+                    @endif
+
+
+                    {{-- @if (auth()->user()->is_following($user))
                         <a href="{{ route('users.unfollow', $user->username) }}"
                             class="w-30 bg-blue-400 text-white px-3 py-1 rounded text-center self-start">
-                            {{ __('Unfollow') }}
+                            {{__('Unfollow')}}
                         </a>
                     @elseif (auth()->user()->is_pending($user))
                         <span class="w-30 bg-gray-400 text-white px-3 py-1 rounded text-center self-start">
@@ -33,7 +36,9 @@
                             class="w-30 bg-blue-400 text-white px-3 py-1 rounded text-center self-start">
                             {{ __('Follow') }}
                         </a>
-                    @endif
+                    @endif --}}
+                    <livewire:follow :userId="$user->id"
+                        classes="w-30 inline-block bg-blue-400 text-white px-3 py-1 rounded text-center self-start cursor-pointer" />
                 @endauth
 
                 @guest
