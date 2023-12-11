@@ -19,8 +19,10 @@
                     @if ($user->id === auth()->id())
                         <a href="/{{ $user->username }}/edit"
                             class="w-50 border text-sm font-bold px-4 py-1 rounded-md border-neutral-300 text-center">{{ __('Edit Profile') }}</a>
+                    @else
+                        <livewire:follow-button :userId="$user->id"
+                            classes="w-30 inline-block bg-blue-400 text-white px-3 py-1 rounded text-center self-start cursor-pointer" />
                     @endif
-
 
                     {{-- @if (auth()->user()->is_following($user))
                         <a href="{{ route('users.unfollow', $user->username) }}"
@@ -30,15 +32,7 @@
                     @elseif (auth()->user()->is_pending($user))
                         <span class="w-30 bg-gray-400 text-white px-3 py-1 rounded text-center self-start">
                             {{ __('Pending') }}
-                        </span>
-                    @else
-                        <a href="{{ route('users.follow', $user->username) }}"
-                            class="w-30 bg-blue-400 text-white px-3 py-1 rounded text-center self-start">
-                            {{ __('Follow') }}
-                        </a>
-                    @endif --}}
-                    <livewire:follow :userId="$user->id"
-                        classes="w-30 inline-block bg-blue-400 text-white px-3 py-1 rounded text-center self-start cursor-pointer" />
+                        </span> --}}
                 @endauth
 
                 @guest
@@ -76,13 +70,7 @@
                         {{ $user->followers()->count() > 1 ? __(' followers') : __(' follower') }}</span>
                 </li>
 
-                <li class="flex flex-col md:flex-row text-center">
-                    <div class="md:ltr:mr-1 md:rtl:ml-1 font-bold md:font-normal">
-                        {{ $user->following()->count() }}
-                    </div>
-                    <span class='text-neutral-500 ml-1 md:text-black'>
-                        {{ $user->following()->count() > 1 ? __(' followings') : __(' following') }}</span>
-                </li>
+                <livewire:following :userId="$user->id" />
             </ul>
         </div>
     </div>

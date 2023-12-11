@@ -1,23 +1,15 @@
 <x-app-layout>
     <div class="flex flex-row max-w-3xl gap-8 mx-auto">
         {{-- Left Side  --}}
-        <div class="w-[30rem] mx-auto lg:w-[95rem]">
-            @forelse($posts as $post)
-                <x-post :post="$post" />
-            @empty
-                <div class="max-w-2xl gap-8 mx-auto">
-                    {{ __('Start Following Your Friends and Enjoy.') }}
-                </div>
-            @endforelse
-        </div>
+        <livewire:posts-list />
 
         {{-- Right Side  --}}
         <div class="hidden w-[60rem] lg:flex lg:flex-col pt-4">
             <div class="flex flex-row text-sm">
                 <div class="mr-5">
                     <a href="/{{ auth()->user()->username }}">
-                        <img src="{{ asset('storage/' . auth()->user()->image) }}" alt="{{ auth()->user()->username }}"
-                            class="h-12 w-12 rounded-full border border-gray-300">
+                        <img src="{{ strpos(auth()->user()->image, 'https') !== false ? auth()->user()->image : asset('storage/' . auth()->user()->image) }}"
+                            alt="{{ auth()->user()->username }}" class="h-12 w-12 rounded-full border border-gray-300">
                     </a>
                 </div>
 
@@ -37,7 +29,8 @@
                         <li class="flex flex-row my-5 text-sm justify-items-center">
                             <div class="mr-5">
                                 <a href="/{{ $suggestedUser->username }}" class="font-bold">
-                                    <img src="{{ $suggestedUser->image }}" alt="{{ $suggestedUser->username }}"
+                                    <img src="{{ strpos($suggestedUser->image, 'https') !== false ? $suggestedUser->image : asset('storage/' . $suggestedUser->image) }}"
+                                        alt="{{ $suggestedUser->username }}"
                                         class="w-9 h-9 rounded-full border-gray-300">
                                 </a>
                             </div>
@@ -56,8 +49,10 @@
                             @if (auth()->user()->is_pending($suggestedUser))
                                 <span class="text-gray-500 font-bold">{{ __('Pending') }}</span>
                             @else
-                                <a href="{{ route('users.follow', $suggestedUser->username) }}"
-                                    class="text-blue-500 font-bold">{{ __('Follow') }}</a>
+                                {{-- <a href="{{ route('users.follow', $suggestedUser->username) }}"
+                                    class="text-blue-500 font-bold">{{ __('Follow') }}</a> --}}
+                                <livewire:follow-button :userId="$suggestedUser->id"
+                                    classes="w-30 text-blue-500 text-sm font-bold px-3 text-center cursor-pointer" />
                             @endif
                         </li>
                     @endforeach
