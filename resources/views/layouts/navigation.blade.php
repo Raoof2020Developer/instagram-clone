@@ -18,6 +18,10 @@
                 </div>
             </div>
 
+            <div class="hidden sm:flex sm:items-center">
+                <livewire:search />
+            </div>
+
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 @guest
