@@ -18,9 +18,13 @@
                         <a href="/{{ $post->owner->username }}" class="font-bold">{{ $post->owner->username }}</a>
                     </div>
                     @can('update', $post)
-                        <a href="{{ route('posts.edit', $post->slug) }}">
+                        {{-- <a href="{{ route('posts.edit', $post->slug) }}">
                             <i class='bx bxs-edit text-xl'></i>
-                        </a>
+                        </a> --}}
+                        <button
+                            onclick="Livewire.dispatch('openModal', {component: 'edit-post-modal', arguments: {post: {{ $post->id }}}})">
+                            <i class='bx bxs-edit text-xl'></i>
+                        </button>
                         <form action="{{ route('posts.destroy', $post->slug) }}" method="post">
                             @csrf
                             @method('DELETE')
