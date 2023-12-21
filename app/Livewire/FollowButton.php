@@ -15,19 +15,23 @@ class FollowButton extends Component
 
     public $classes;
 
-    public function mount() {
+    public function mount()
+    {
         $this->user = User::find($this->userId);
         $this->set_follow_state();
     }
 
-    
-    public function toggleFollow() {
+
+    public function toggleFollow()
+    {
         $this->user = User::find($this->userId);
         auth()->user()->toggle_follow($this->user);
         $this->set_follow_state();
+        $this->dispatch('toggleFollow');
     }
 
-    protected function set_follow_state() {
+    protected function set_follow_state()
+    {
         if (auth()->user()->is_pending($this->user)) {
             $this->follow_state = 'Pending';
         } elseif (auth()->user()->is_following($this->user)) {
@@ -37,7 +41,8 @@ class FollowButton extends Component
         }
     }
 
-    public function render() {
+    public function render()
+    {
         return view('livewire.follow-button');
     }
 }

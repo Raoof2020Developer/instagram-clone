@@ -1,9 +1,9 @@
 <div class="relative flex items-center">
-    <input type="text" name="search" wire:model="searchInput"
+    <input type="text" name="search" wire:model.live="searchInput"
         class="w-56 md:w-64 lg:w-96 border-none bg-gray-100 rounded-xl h-10 focus:ring-0"
         placeholder="{{ __('Search...') }}" autocomplete="off" />
     @if (!empty($searchInput))
-        <button class="absolute ltr:right-3 rtl:left-3" wire:click="clear">
+        <button class="absolute right-3 rtl:left-3" wire:click="clear">
             <i class="bx bx-x-circle text-gray-400"></i>
         </button>
     @endif
@@ -28,13 +28,13 @@
                             </div>
                         </div>
                     </li>
+                @empty
+                    <li class="w-full p-3 text-center">
+                        {{ __('There are no results') }}
+                    </li>
+                @endforelse
 
             </ul>
-        @empty
-            <div class="w-full p-3 text-center">
-                {{ __('There are no results') }}
-            </div>
-        @endforelse
         @endif
     </div>
 
